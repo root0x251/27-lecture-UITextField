@@ -511,6 +511,7 @@
 				F925A4471ED89F5B00562E37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F925A4481ED89F5B00562E37 /* Build configuration list for PBXNativeTarget "27.UITextFieldTests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +520,7 @@
 				F925A44A1ED89F5B00562E37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F925A44B1ED89F5B00562E37 /* Build configuration list for PBXNativeTarget "27.UITextFieldUITests" */ = {
 			isa = XCConfigurationList;
@@ -527,6 +529,7 @@
 				F925A44D1ED89F5B00562E37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

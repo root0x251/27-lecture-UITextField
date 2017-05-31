@@ -93,18 +93,87 @@
     return YES;
 }
 
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+//    NSLog(@"textField text: %@", textField.text);
+//    NSLog(@"shouldChangeCharactersInRange: %@", NSStringFromRange(range));
+//    NSLog(@"string: %@", string);
+    
+    
+//    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@" ,"];
+//    NSCharacterSet *set = [[NSCharacterSet decimalDigitCharacterSet] invertedSet]; // используем все кроме цифр (invertedSet инвертирует)
+//    NSArray *words = [resultString componentsSeparatedByString:@" "];
+//    NSArray *words = [resultString componentsSeparatedByCharactersInSet:set];
+//    NSLog(@"words: %@", words);
+//    return [resultString length] <= 10; // ограничение на вводимые символы
+
+    
+    NSCharacterSet *validSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:validSet];
+    if ([components count] > 1) {
+        return NO;
+    } else {
+        NSLog(@"VALID");
+    }
+    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSLog(@"new String fixed: %@", newString);
+
+    NSArray *validComponents = [newString componentsSeparatedByCharactersInSet:validSet];
+    newString = [validComponents componentsJoinedByString:@""];
+    // создаем константы
+    static const int localNumberMaxLenght = 7;
+    static const int areaCodeMaxLenght = 3;
+    static const int countryCodeMaxLenght = 3;
+    
+    if ([newString length] > localNumberMaxLenght + areaCodeMaxLenght + countryCodeMaxLenght) {
+        return  NO;
+    }
+    
+    NSMutableString *resultString = [NSMutableString new];
+    
+    NSInteger localNumberLenght = MIN([newString length], localNumberMaxLenght);
+    if (localNumberLenght > 0) {
+        NSString *number = [newString substringFromIndex:(int)[newString length] - localNumberLenght];
+        [resultString appendString:number];
+        if ([resultString length] > 3) {
+            [resultString insertString:@"-" atIndex:3];
+        }
+    }
+    if ([newString length] > localNumberMaxLenght) {
+        NSInteger areaCodeLenght = MIN((int)[newString length] - localNumberMaxLenght, localNumberMaxLenght);
+        NSRange areaRange = NSMakeRange((int)[newString length] - localNumberMaxLenght - areaCodeLenght, areaCodeLenght);
+        NSString *area = [newString substringWithRange:areaRange];
+        area = [NSString stringWithFormat:@"(%@) ", area];
+        [resultString insertString:area atIndex:0];
+    }
+    if ([newString length] > localNumberMaxLenght + areaCodeMaxLenght) {
+        NSInteger countryCodeLenght = MIN((int)[newString length] - localNumberMaxLenght - areaCodeMaxLenght, countryCodeMaxLenght);
+        NSRange countryCodeRange = NSMakeRange(0, countryCodeLenght);
+        NSString *countryCode = [newString substringWithRange:countryCodeRange];
+        countryCode = [NSString stringWithFormat:@"+%@ ", countryCode];
+        [resultString insertString:countryCode atIndex:0];
+    }
+    
+    textField.text = resultString;
+    
+    return NO;
+}
+
+
+
 #pragma mark - Notification
 
 - (void)notificationTextDidBeginEditing:(NSNotification *)notification {
-    NSLog(@"notificationTextDidBeginEditing");
+//    NSLog(@"notificationTextDidBeginEditing");
 }
 
 - (void)notificationTextDidEndEditing:(NSNotification *)notification {
-    NSLog(@"notificationTextDidEndEditing");
+//    NSLog(@"notificationTextDidEndEditing");
 }
 
 - (void)notificationTextDidChang:(NSNotification *)notification {
-    NSLog(@"notificationTextDidChang");
+//    NSLog(@"notificationTextDidChang");
 }
 
 @end
